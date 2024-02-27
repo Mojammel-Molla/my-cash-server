@@ -23,6 +23,7 @@ const client = new MongoClient(uri, {
 const usersCollection = client.db('my-cashDB').collection('users');
 const transactionCollection = client.db('my-cashDB').collection('transactions');
 const commissionCollection = client.db('my-cashDB').collection('commissions');
+const requestCollection = client.db('my-cashDB').collection('requests');
 
 async function run() {
   try {
@@ -44,6 +45,12 @@ async function run() {
     app.post('/users', async (req, res) => {
       const newUser = req.body;
       const result = await usersCollection.insertOne(newUser);
+      res.send(result);
+    });
+
+    // users requests get method
+    app.get('/requests', async (req, res) => {
+      const result = await requestCollection.find().toArray();
       res.send(result);
     });
     // transactions data post method
