@@ -53,6 +53,12 @@ async function run() {
       const result = await requestCollection.find().toArray();
       res.send(result);
     });
+    // users requests post method
+    app.get('/requests', async (req, res) => {
+      const request = req.body;
+      const result = await requestCollection.insertOne(request);
+      res.send(result);
+    });
     // transactions data post method
     app.post('/commissions', async (req, res) => {
       const commission = req.body;
