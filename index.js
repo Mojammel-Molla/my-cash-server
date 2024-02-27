@@ -52,12 +52,18 @@ async function run() {
       const result = await commissionCollection.find().toArray();
       res.send(result);
     });
-    // transaction data post method
+    // transactions data post method
     app.post('/transactions', async (req, res) => {
       const transaction = req.body;
       const result = await transactionCollection.insertOne(transaction);
       res.send(result);
     });
+    // transactions data get method
+    app.get('/transactions', async (req, res) => {
+      const result = await transactionCollection.find().toArray();
+      res.send(result);
+    });
+
     // users data delete method
     app.delete('/users/:id', async (req, res) => {
       const id = req.params.id;
