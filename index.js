@@ -21,6 +21,8 @@ const client = new MongoClient(uri, {
 });
 
 const usersCollection = client.db('my-cashDB').collection('users');
+const transactionCollection = client.db('my-cashDB').collection('transactions');
+const commissionCollection = client.db('my-cashDB').collection('commissions');
 
 async function run() {
   try {
@@ -31,20 +33,30 @@ async function run() {
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
+
+    // users data get method
     app.get('/users', async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
 
+    // user data post method
     app.post('/users', async (req, res) => {
       const newUser = req.body;
       const result = await usersCollection.insertOne(newUser);
       res.send(result);
     });
 
-    app.delete('/users:id', async (req, res) => {
+    // commission data get method
+    app.get('/commissions', async (req, res) => {
+      const result = await commissionCollection.find().toArray();
+      res.send(result);
+    });
+    // users data delete method
+    app.delete('/users/:id', async (req, res) => {
       const id = req.params.id;
-      const query = { id: ObjectId(id) };
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
