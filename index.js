@@ -46,6 +46,12 @@ async function run() {
       const result = await usersCollection.insertOne(newUser);
       res.send(result);
     });
+    // transactions data post method
+    app.post('/commissions', async (req, res) => {
+      const commission = req.body;
+      const result = await commissionCollection.insertOne(commission);
+      res.send(result);
+    });
 
     // commission data get method
     app.get('/commissions', async (req, res) => {
@@ -67,7 +73,6 @@ async function run() {
     // users data delete method
     app.delete('/users/:id', async (req, res) => {
       const id = req.params.id;
-      console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
       res.send(result);
