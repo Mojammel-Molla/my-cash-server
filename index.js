@@ -34,6 +34,15 @@ async function run() {
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
+    // Post Jwt token
+    app.post('/jwt', async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '1hr',
+      });
+      console.log(token);
+      res.send({ success: true });
+    });
 
     // users data get method
     app.get('/users', async (req, res) => {
@@ -48,13 +57,23 @@ async function run() {
       res.send(result);
     });
 
+    //  get all users data
+    app.get('/users', async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = { email: req.query.email };
+      }
+      const result = await usersCollection.findOne(query);
+      res.send(result);
+    });
+
     // users requests get method
     app.get('/requests', async (req, res) => {
       const result = await requestCollection.find().toArray();
       res.send(result);
     });
     // users requests post method
-    app.get('/requests', async (req, res) => {
+    app.post('/requests', async (req, res) => {
       const request = req.body;
       const result = await requestCollection.insertOne(request);
       res.send(result);
@@ -80,6 +99,31 @@ async function run() {
     // transactions data get method
     app.get('/transactions', async (req, res) => {
       const result = await transactionCollection.find().toArray();
+      res.send(result);
+    });
+
+    //get specific user transactions by name
+    app.get('/user-transactions', async (req, res) => {
+      let query = {};
+      if (req.query.name) {
+        query = { sender: req.query.name };
+      }
+      console.log(query);
+      const result = await transactionCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.put('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedBalance = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: false };
+      const coupon = {
+        $set: {
+          coupon: updatedBalance.fee,
+        },
+      };
+      const result = await usersCollection.updateOne(filter, coupon, options);
       res.send(result);
     });
 
