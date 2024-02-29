@@ -58,11 +58,12 @@ async function run() {
     });
 
     //  get all users data
-    app.get('/users', async (req, res) => {
+    app.get('/user', async (req, res) => {
       let query = {};
       if (req.query.email) {
         query = { email: req.query.email };
       }
+      console.log(query);
       const result = await usersCollection.findOne(query);
       res.send(result);
     });
