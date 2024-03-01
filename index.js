@@ -63,7 +63,6 @@ async function run() {
       if (req.query.email) {
         query = { email: req.query.email };
       }
-      console.log(query);
       const result = await usersCollection.findOne(query);
       res.send(result);
     });
@@ -148,4 +147,14 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`your server is running on port ${port}`);
+});
+
+//  get all users data
+app.get('/user', async (req, res) => {
+  let query = {};
+  if (req.query.email) {
+    query = { email: req.query.email };
+  }
+  const result = await usersCollection.findOne(query);
+  res.send(result);
 });
